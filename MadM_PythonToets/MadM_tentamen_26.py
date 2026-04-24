@@ -112,6 +112,23 @@ print(f"Gemiddelde trapfrequentie: {cadence_rpm:.2f} RPM")
 # %% Opdracht 1f (0,5 pt) 
 # Bereken de heuphoek (in graden) met behulp van de knee, hip en pelvis marker.
 # maak een plot van zowel de kniehoek als de heuphoek (in dezelfde plot) zorg ook voor legends en voor passende titels voor de grafiek en op de assen.
+vec_hip_to_knee = knee - hip
+vec_hip_to_pelvis = pelvis - hip
+
+dot_prod_hip = np.sum(vec_hip_to_knee * vec_hip_to_pelvis, axis=1)
+norm_prod_hip = np.linalg.norm(vec_hip_to_knee, axis=1) * np.linalg.norm(vec_hip_to_pelvis, axis=1)
+cos_hip = dot_prod_hip / norm_prod_hip
+cos_hip = np.clip(cos_hip, -1.0, 1.0)
+hip_ang_deg = np.degrees(np.arccos(cos_hip))
+
+plt.figure()
+plt.plot(knee_ang_deg, label="Kniehoek")
+plt.plot(hip_ang_deg, label="Heuphoek")
+plt.title("Kniehoek en heuphoek tijdens fietsen")
+plt.xlabel("Frame")
+plt.ylabel("Hoek (graden)")
+plt.legend()
+plt.grid(True)
 
 
 # %% Opdracht 1g (0,5 pt) 
