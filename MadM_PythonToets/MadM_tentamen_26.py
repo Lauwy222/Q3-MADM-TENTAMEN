@@ -37,6 +37,17 @@ pelvis = markerdata[:, 8:10]
 # %% Opdracht 1a. (0,5 pt)
 # Maak een zogenaamde X,Y plot van de markerpaden van de ankle, knee en hip marker (plot de X waarden tegen de Y waarden). 
 # Zorg voor een passende grafiek titel en passende titels bij de X en de Y-as van de grafiek. 
+plt.figure()
+plt.plot(ankle[:, 0], ankle[:, 1], label="Ankle")
+plt.plot(knee[:, 0], knee[:, 1], label="Knee")
+plt.plot(hip[:, 0], hip[:, 1], label="Hip")
+plt.plot(pelvis[:, 0], pelvis[:, 1], label="Pelvis")
+plt.title("2D markerpaden tijdens fietsen")
+plt.xlabel("X-positie (pixels)")
+plt.ylabel("Y-positie (pixels)")
+plt.axis("equal")
+plt.legend()
+plt.grid(True)
 
 
 # %% Opdracht 1b (1 pt)  
