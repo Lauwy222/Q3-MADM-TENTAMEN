@@ -53,12 +53,38 @@ plt.grid(True)
 # %% Opdracht 1b (1 pt)  
 # Gebruik de drie markers (ankle, knee en hip) om de kniehoek (in graden) te berekenen. 
 # Maak een plot van de kniehoek (in graden) met passende titels op de X en de Y as.  
+vec_knee_to_ankle = ankle - knee
+vec_knee_to_hip = hip - knee
+
+dot_prod = np.sum(vec_knee_to_ankle * vec_knee_to_hip, axis=1)
+norm_prod = np.linalg.norm(vec_knee_to_ankle, axis=1) * np.linalg.norm(vec_knee_to_hip, axis=1)
+cos_knee = dot_prod / norm_prod
+cos_knee = np.clip(cos_knee, -1.0, 1.0)
+knee_ang_deg = np.degrees(np.arccos(cos_knee))
+
+plt.figure()
+plt.plot(knee_ang_deg, label="Kniehoek")
+plt.title("Kniehoek tijdens fietsen")
+plt.xlabel("Frame")
+plt.ylabel("Hoek (graden)")
+plt.legend()
+plt.grid(True)
 
 
 # %% Opdracht 1c (1 pt)  
 # Bepaal alle indexen (framenummers) van de momenten dat de knie tijdens de diverse cycli in de uiterste gebogen stand is (de dalen in de kniehoek grafiek). 
 # Gebruik die indexen om een rode stip te plotten in de grafiek van de kniehoek 
 # (maak dus nogmaals een plot van de kniehoek en voeg de rode stippen toe).
+idx_flex_knee, _ = find_peaks(-knee_ang_deg, distance=20)
+
+plt.figure()
+plt.plot(knee_ang_deg, label="Kniehoek")
+plt.plot(idx_flex_knee, knee_ang_deg[idx_flex_knee], "ro", label="Maximale knieflexie")
+plt.title("Kniehoek met momenten van maximale flexie")
+plt.xlabel("Frame")
+plt.ylabel("Hoek (graden)")
+plt.legend()
+plt.grid(True)
 
 
 # %% Opdracht 1d (0,5 pt)  
