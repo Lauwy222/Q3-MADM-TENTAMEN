@@ -185,7 +185,7 @@ upp_leg_angle_acc_x = np.degrees(np.arccos(acc_x / g))
 #%% Opdracht 2d (0,5 p) 
 # Plot het berekende hoeksignaal signaal tegen de tijd, maar alleen van sample 200 tot 2000. 
 idx_start = 200
-idx_end = 2000
+idx_end = 2001
 
 plt.figure()
 plt.plot(time[idx_start:idx_end], upp_leg_angle_acc_x[idx_start:idx_end], label="Hoek uit Acc X")
@@ -201,13 +201,42 @@ plt.grid(True)
 # Sla dit gefilterde signaal op als “acc_x_lp”. En bereken nu de hoek (in graden) van de sensor ten opzichte van de verticaal, op basis van dit gefilterde signaal. 
 # Komt er nu ook nog een waarschuwing bij het runnen van de code? 
 # Plot deze nieuw berekende hoek in dezelfde plot als 2d (ook van sample 200 – 2000).
+fc = 5.0
+b, a = signal.butter(4, fc, btype="low", fs=fs)
+acc_x_lp = signal.filtfilt(b, a, acc_x)
+
+ratio_lp = np.clip(acc_x_lp / g, -1.0, 1.0)
+upp_leg_angle_acc_x_lp = np.degrees(np.arccos(ratio_lp))
+# Met filtering + clippen voorkom je doorgaans de arccos-waarschuwing door out-of-range waarden.
+
+plt.plot(
+    time[idx_start:idx_end],
+    upp_leg_angle_acc_x_lp[idx_start:idx_end],
+    label="Hoek uit gefilterde Acc X",
+)
+plt.legend()
 
 # %% Opdracht 2f (0.5 p) 
 # Bereken de hoekversnelling op basis van Gyro Z signaal, en sla deze op als “angular_acc_gyro_z”. 
+gyro_z = imu_data[:, 3]
+angular_acc_gyro_z = np.gradient(gyro_z, time)
 
 
 # %% Opdracht 2g (0.5 p)  
 # Geef de code voor het vinden van de hoogste hoekversnelling (angular_acc_gyro_z), zowel de waarde, als het tijdstip.  
+idx_peak_acc = np.argmax(angular_acc_gyro_z)
+peak_angular_acc = angular_acc_gyro_z[idx_peak_acc]
+time_peak_angular_acc = time[idx_peak_acc]
+print(f"Hoogste hoekversnelling: {peak_angular_acc:.2f} deg/s^2")
+print(f"Tijdstip van hoogste hoekversnelling: {time_peak_angular_acc:.3f} s")
 
 # %% Opdracht 2h (0.5 p) 
 # Plot “angular_acc_gyro_z” tegen de tijd en plot een rode stip/rondje rond de gevonden piek. Voeg as-labels en een legenda toe.
+plt.figure()
+plt.plot(time, angular_acc_gyro_z, label="Hoekversnelling uit Gyro Z")
+plt.plot(time_peak_angular_acc, peak_angular_acc, "ro", label="Hoogste piek")
+plt.title("Hoekversnelling op basis van Gyro Z")
+plt.xlabel("Tijd (s)")
+plt.ylabel("Hoekversnelling (deg/s^2)")
+plt.legend()
+plt.grid(True)
