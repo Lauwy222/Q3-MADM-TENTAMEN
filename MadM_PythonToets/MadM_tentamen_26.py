@@ -89,9 +89,24 @@ plt.grid(True)
 
 # %% Opdracht 1d (0,5 pt)  
 # Bereken de hoeksnelheid in het kniegewricht (in graden per seconde). De framerate van de video was 120 beeldjes per seconde (fps). maak een plot van je resultaat.
+fps_video = 120.0
+knee_ang_vel = np.gradient(knee_ang_deg) * fps_video
+
+plt.figure()
+plt.plot(knee_ang_vel, label="Hoeksnelheid knie")
+plt.title("Hoeksnelheid van de knie tijdens fietsen")
+plt.xlabel("Frame")
+plt.ylabel("Hoeksnelheid (graden/s)")
+plt.legend()
+plt.grid(True)
 
 # %% Opdracht 1e(1 pt)  
 # Schrijf de code om de gemiddelde trapfrequentie te berekenen. Druk die uit in RPM (Rotations Per Minute = omwentelingen per minuut) 
+cycle_period_frames = np.diff(idx_flex_knee)
+cycle_period_sec = cycle_period_frames / fps_video
+mean_cycle_period_sec = np.mean(cycle_period_sec)
+cadence_rpm = 60.0 / mean_cycle_period_sec
+print(f"Gemiddelde trapfrequentie: {cadence_rpm:.2f} RPM")
 
 
 # %% Opdracht 1f (0,5 pt) 
