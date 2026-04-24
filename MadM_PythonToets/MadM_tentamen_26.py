@@ -135,6 +135,15 @@ plt.grid(True)
 # Bereken alle tijdsverschillen tussen de uiterste flexiestand van de knie en de uiterste flexiestand van de heup.
 # Bereken op basis van die uitkomsten ook het gemiddelde tijdsverschil. 
 # Lees de tips in de opdrachtsomschrijving. 
+idx_flex_hip, _ = find_peaks(-hip_ang_deg, distance=20)
+
+n_cycles = min(len(idx_flex_knee), len(idx_flex_hip))
+frame_diff_flex = idx_flex_hip[:n_cycles] - idx_flex_knee[:n_cycles]
+time_diff_flex_sec = frame_diff_flex / fps_video
+mean_time_diff_flex_sec = np.mean(time_diff_flex_sec)
+
+print("Tijdsverschillen knie-heup flexie per cyclus (s):", time_diff_flex_sec)
+print(f"Gemiddeld tijdsverschil knie-heup flexie: {mean_time_diff_flex_sec:.4f} s")
 
 # %% Vragen over de analyse van IMU data
 # Lees de IMU data in en sla de eerste "header" regel over
