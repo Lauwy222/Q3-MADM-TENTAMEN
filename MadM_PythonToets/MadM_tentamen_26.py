@@ -157,19 +157,43 @@ imu_data = np.loadtxt("sensors.csv", delimiter=",", skiprows=1).astype(float)
 # Magnetometer X, Y en Z, kolom 7, 8, en 9
 
 # %% Opdracht 2a (0,5 p) Bereken de gemiddelde samplefrequentie op basis van de gehele tijdsas en sla deze op als "fs".
+time = imu_data[:, 0]
+dt = np.diff(time)
+fs = 1.0 / np.mean(dt)
+print(f"Gemiddelde samplefrequentie fs: {fs:.2f} Hz")
 
 
 # %% Opdracht 2b (0,5 p)  
 # Bereken de minimale en maximale samplefrequentie die binnen dit signaal optreden 
+fs_inst = 1.0 / dt
+fs_min = np.min(fs_inst)
+fs_max = np.max(fs_inst)
+print(f"Minimale samplefrequentie: {fs_min:.2f} Hz")
+print(f"Maximale samplefrequentie: {fs_max:.2f} Hz")
 
 
 #%% Opdracht 2c (0,5 p) 
 # Zet het versnellingssignaal van X om naar de hoek (in graden) van de sensor ten opzichte van de verticaal. Sla deze op als “upp_leg_angle_acc_x” 
 # Waarschijnlijk wordt er bij het berekenen een waarschuwing gegeven. Leg uit waar deze waarschuwing vandaan komt (zet dit als commentaar bij je code). . 
+acc_x = imu_data[:, 4]
+g = 9.81
+# Waarschuwing komt doordat acc_x/g soms buiten [-1, 1] valt (ruis + dynamische versnelling),
+# waardoor arccos een ongeldige invoer krijgt en NaN kan opleveren.
+upp_leg_angle_acc_x = np.degrees(np.arccos(acc_x / g))
 
 
 #%% Opdracht 2d (0,5 p) 
 # Plot het berekende hoeksignaal signaal tegen de tijd, maar alleen van sample 200 tot 2000. 
+idx_start = 200
+idx_end = 2000
+
+plt.figure()
+plt.plot(time[idx_start:idx_end], upp_leg_angle_acc_x[idx_start:idx_end], label="Hoek uit Acc X")
+plt.title("Bovenbeenhoek op basis van Acc X (sample 200-2000)")
+plt.xlabel("Tijd (s)")
+plt.ylabel("Hoek t.o.v. verticaal (graden)")
+plt.legend()
+plt.grid(True)
 
 
 # %% Opdracht 2e (0.5 p) 
