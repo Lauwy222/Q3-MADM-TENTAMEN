@@ -1,0 +1,111 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon apr 7 12:21:14 2025
+
+@author: alagerberg and rvdSlikke
+this script loads the video and IMU data
+"""
+import numpy as np
+from scipy import signal
+from scipy.signal import find_peaks
+import matplotlib.pyplot as plt
+
+#%% inladen van de markerdata
+markerdata = np.loadtxt("video_data.csv", delimiter=";", dtype=float)
+# toe = markerdata[:, :2]
+ankle = markerdata[:, 2:4]
+knee = markerdata[:, 4:6]
+hip = markerdata[:, 6:8]
+pelvis = markerdata[:, 8:10]
+
+#%% inladen van de tussenresultaten van de gewrichtshoeken en hoeksnelheid (gebruik die alleen als je zelf niet tot een antwoord komt bij een van de vragen)
+#results = np.loadtxt("video_results2.csv", delimiter=";", dtype=float)
+#knee_ang_deg = results[:, 0]
+#knee_ang_vel = results[:, 1]
+#hip_ang_deg = results[:,2]
+
+#%% inladen van de indexen van de maximale knieflexie events. Gebruik die bij vraag 1g als je ze zelf niet berekenen kon bij 1c
+#idx_flex_knee = np.loadtxt("knee_idx.csv", delimiter=";").astype(np.int64)
+
+# %% Opdrachten (1a tm g) over het onderdeel 2D-videoanalyse
+# in het script staat steeds een korte samenvatting van de opdracht, maar lees vooral ook de complete opdracht in het meegeleverde opdrachtenformulier.
+# Run het script voordat je met de vragen begint. Pas daarna zijn de variabelen die hierboven ingeladen worden beschikbaar
+# de variabelen die gemaakt worden in regel 21 tm 24 en 27, heb je alleen nodig als je bij
+# een van de onderstaande opdrachten niet tot een antwoord kunt komen.
+# Haal in dat geval de # weg en run je script opnieuw om verder te kunnen werken met de betreffende variabele.
+
+# %% Opdracht 1a. (0,5 pt)
+# Maak een zogenaamde X,Y plot van de markerpaden van de ankle, knee en hip marker (plot de X waarden tegen de Y waarden). 
+# Zorg voor een passende grafiek titel en passende titels bij de X en de Y-as van de grafiek. 
+
+
+# %% Opdracht 1b (1 pt)  
+# Gebruik de drie markers (ankle, knee en hip) om de kniehoek (in graden) te berekenen. 
+# Maak een plot van de kniehoek (in graden) met passende titels op de X en de Y as.  
+
+
+# %% Opdracht 1c (1 pt)  
+# Bepaal alle indexen (framenummers) van de momenten dat de knie tijdens de diverse cycli in de uiterste gebogen stand is (de dalen in de kniehoek grafiek). 
+# Gebruik die indexen om een rode stip te plotten in de grafiek van de kniehoek 
+# (maak dus nogmaals een plot van de kniehoek en voeg de rode stippen toe).
+
+
+# %% Opdracht 1d (0,5 pt)  
+# Bereken de hoeksnelheid in het kniegewricht (in graden per seconde). De framerate van de video was 120 beeldjes per seconde (fps). maak een plot van je resultaat.
+
+# %% Opdracht 1e(1 pt)  
+# Schrijf de code om de gemiddelde trapfrequentie te berekenen. Druk die uit in RPM (Rotations Per Minute = omwentelingen per minuut) 
+
+
+# %% Opdracht 1f (0,5 pt) 
+# Bereken de heuphoek (in graden) met behulp van de knee, hip en pelvis marker.
+# maak een plot van zowel de kniehoek als de heuphoek (in dezelfde plot) zorg ook voor legends en voor passende titels voor de grafiek en op de assen.
+
+
+# %% Opdracht 1g (0,5 pt) 
+# Bereken alle tijdsverschillen tussen de uiterste flexiestand van de knie en de uiterste flexiestand van de heup.
+# Bereken op basis van die uitkomsten ook het gemiddelde tijdsverschil. 
+# Lees de tips in de opdrachtsomschrijving. 
+
+# %% Vragen over de analyse van IMU data
+# Lees de IMU data in en sla de eerste "header" regel over
+imu_data = np.loadtxt("sensors.csv", delimiter=",", skiprows=1).astype(float)
+
+# %%
+# De imu_data bevat de volgende kolommen:
+# Tijdas (s) kolom 0
+# Gyro X Y en Z (deg/s), kolom 1, 2 en 3
+# Versnelling (m/s^2, Acc) X, Y, en Z, kolom 4, 5 en 6
+# Magnetometer X, Y en Z, kolom 7, 8, en 9
+
+# %% Opdracht 2a (0,5 p) Bereken de gemiddelde samplefrequentie op basis van de gehele tijdsas en sla deze op als "fs".
+
+
+# %% Opdracht 2b (0,5 p)  
+# Bereken de minimale en maximale samplefrequentie die binnen dit signaal optreden 
+
+
+#%% Opdracht 2c (0,5 p) 
+# Zet het versnellingssignaal van X om naar de hoek (in graden) van de sensor ten opzichte van de verticaal. Sla deze op als “upp_leg_angle_acc_x” 
+# Waarschijnlijk wordt er bij het berekenen een waarschuwing gegeven. Leg uit waar deze waarschuwing vandaan komt (zet dit als commentaar bij je code). . 
+
+
+#%% Opdracht 2d (0,5 p) 
+# Plot het berekende hoeksignaal signaal tegen de tijd, maar alleen van sample 200 tot 2000. 
+
+
+# %% Opdracht 2e (0.5 p) 
+# Low-pass filter het versnellingssignaal van X met een 4e order Butterworth filter en een Cut-off frequentie van 5 Hz. 
+# Sla dit gefilterde signaal op als “acc_x_lp”. En bereken nu de hoek (in graden) van de sensor ten opzichte van de verticaal, op basis van dit gefilterde signaal. 
+# Komt er nu ook nog een waarschuwing bij het runnen van de code? 
+# Plot deze nieuw berekende hoek in dezelfde plot als 2d (ook van sample 200 – 2000).
+
+# %% Opdracht 2f (0.5 p) 
+# Bereken de hoekversnelling op basis van Gyro Z signaal, en sla deze op als “angular_acc_gyro_z”. 
+
+
+# %% Opdracht 2g (0.5 p)  
+# Geef de code voor het vinden van de hoogste hoekversnelling (angular_acc_gyro_z), zowel de waarde, als het tijdstip.  
+
+# %% Opdracht 2h (0.5 p) 
+# Plot “angular_acc_gyro_z” tegen de tijd en plot een rode stip/rondje rond de gevonden piek. Voeg as-labels en een legenda toe.
